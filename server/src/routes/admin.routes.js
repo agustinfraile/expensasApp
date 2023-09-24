@@ -5,7 +5,7 @@ const router = Router();
 
 router.post("/", async (req, res) => {
     const { nombre, apellido, email, pass } = req.body;
-    console.log(nombre, apellido, email, pass)
+    
     try {
         // Validar que los campos no estén vacíos
         if (!nombre || !apellido || !email || !pass) {
@@ -91,6 +91,7 @@ router.put('/:id', async(req, res) => {
 });
 
 
+// todo: modificar este endpoint para que no se borre el admin, solo se oculte
 router.delete('/:id', async(req, res) => {
     const { id } = req.params;
     try {
