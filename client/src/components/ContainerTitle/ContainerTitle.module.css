@@ -1,0 +1,19 @@
+.containerTitle {
+    background-color: var(--color-container);
+
+    width: 80%;
+    height: 5em;
+    border-radius: 25px;
+    box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.601);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1em auto;
+}
+
+.containerTitle_title {
+    /* background-color: #fff; */
+    font-size: 2em;
+    font-weight: 600;
+    text-align: center;
+}

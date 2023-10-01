@@ -32,29 +32,45 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
 // Para relacionarlos hacemos un destructuring
-const { Consorcio, Unidad, Administrador, Propietario } = sequelize.models;
+const { Edificio, Empleado, Gasto, Ingreso, Propietario, ServicioMensual, Unidad  } = sequelize.models;
 
-// Asociación entre Administrador y Consorcio (un Administrador puede tener muchos Consorcios)
-Administrador.hasMany(Consorcio);
+// Relaciones entre modelos
 
+// Un usuario puede tener muchos departamentos, con una clave foránea 'usuarioId'
+Propietario.hasMany(Unidad, { foreignKey: 'usuarioId', as: 'departamentos' });
+// Cada departamento pertenece a un usuario, con una clave foránea 'usuarioId'
+Unidad.belongsTo(Propietario, { foreignKey: 'usuarioId', as: 'propietario' });
 
-// Asociación entre Consorcio y Administrador (un Consorcio pertenece a un único Administrador)
-Consorcio.hasMany(Unidad);
-// Asociación entre Consorcio y Unidad (un Consorcio puede tener muchas Unidades)
-Consorcio.belongsTo(Administrador);
-// Asociación entre Consorcio y Propietario (un Consorcio puede tener muchos Propietarios a través de Unidades)
-Consorcio.belongsToMany(Propietario, { through: "consorcio_propietario" });
+// Un edificio puede tener muchos departamentos, con una clave foránea 'edificioId'
+Edificio.hasMany(Unidad, { foreignKey: 'edificioId', as: 'departamentos' });
+// Cada departamento pertenece a un edificio, con una clave foránea 'edificioId'
+Unidad.belongsTo(Edificio, { foreignKey: 'edificioId', as: 'edificio' });
 
-// Asociación entre Propietario y Unidad (un Propietario puede tener muchas Unidades)
-Propietario.hasMany(Unidad);
-// Asociación entre Propietario y Consorcio (un Propietario puede pertenecer a muchos Consorcios a través de Unidades)
-Propietario.belongsToMany(Consorcio, { through: "consorcio_propietario" } );
+// Un edificio puede tener muchos gastos, con una clave foránea 'edificioId'
+Edificio.hasMany(Gasto, { foreignKey: 'edificioId', as: 'gastos' });
+// Cada gasto pertenece a un edificio, con una clave foránea 'edificioId'
+Gasto.belongsTo(Edificio, { foreignKey: 'edificioId', as: 'edificio' });
 
+// Un edificio puede tener muchos ingresos, con una clave foránea 'edificioId'
+Edificio.hasMany(Ingreso, { foreignKey: 'edificioId', as: 'ingresos' });
+// Cada ingreso pertenece a un edificio, con una clave foránea 'edificioId'
+Ingreso.belongsTo(Edificio, { foreignKey: 'edificioId', as: 'edificio' });
 
-// Asociación entre Unidad y Consorcio (una Unidad pertenece a un único Consorcio)
-Unidad.belongsTo(Consorcio);
-// Asociación entre Unidad y Propietario (una Unidad pertenece a un único Propietario)
-Unidad.belongsTo(Propietario);
+// Un usuario puede tener muchos ingresos, con una clave foránea 'usuarioId'
+Propietario.hasMany(Ingreso, { foreignKey: 'usuarioId', as: 'ingresos' });
+// Cada ingreso pertenece a un usuario, con una clave foránea 'usuarioId'
+Ingreso.belongsTo(Propietario, { foreignKey: 'usuarioId', as: 'propietario' });
+
+// Un edificio puede tener muchos servicios mensuales, con una clave foránea 'edificioId'
+Edificio.hasMany(ServicioMensual, { foreignKey: 'edificioId', as: 'serviciosMensuales' });
+// Cada servicio mensual pertenece a un edificio, con una clave foránea 'edificioId'
+ServicioMensual.belongsTo(Edificio, { foreignKey: 'edificioId', as: 'edificio' });
+
+// Un edificio puede tener muchos empleados 
+Edificio.belongsToMany(Empleado, { through: 'EdificioEmpleado', foreignKey: 'edificioId', as: 'empleados' });
+// Un empleado puede estar en varios edificios
+Empleado.belongsToMany(Edificio, { through: 'EdificioEmpleado', foreignKey: 'empleadoId', as: 'edificios' });
+
 
 module.exports = {
     ...sequelize.models,

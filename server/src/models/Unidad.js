@@ -7,17 +7,21 @@ module.exports = (sequelize) => {
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
         },
-        referenciaUnidad: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        numeroUnidad: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
         metrosCuadrados: {
             type: DataTypes.FLOAT,
             allowNull: false,
         },
+        piso: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        referenciaDepto: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        descripcion: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        }      
     })
 };

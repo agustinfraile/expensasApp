@@ -2,35 +2,28 @@ const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
     sequelize.define(
-        "propietario",
+        "gasto",
         {
             id: {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
                 primaryKey: true,
             },
-            nombre: {
-                type: DataTypes.STRING,
-                allowNull: false
+            monto: {
+                type: DataTypes.FLOAT,
+                allowNull: false,
             },
-            apellido: {
+            edificioAsociado: {
                 type: DataTypes.STRING,
-                allowNull: false
+                allowNull: false,
             },
-            correoElectronico: {
+            descripcion: {
                 type: DataTypes.STRING,
-                unique: true
+                allowNull: false,
             },
-            telefono: {
-                type: DataTypes.STRING,
-            },
-            deptoQueHabita: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
-            deptoPertenece: {
-                type: DataTypes.STRING,
-                allowNull: false
+            fecha: {
+                type: DataTypes.DATE,
+                allowNull: false,
             },
             estado: {
                 type: DataTypes.BOOLEAN,

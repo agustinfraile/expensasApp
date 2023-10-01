@@ -1,0 +1,30 @@
+.cardDeptoHome_container {
+    background-color: rgb(255, 249, 242);
+
+    width: 15em;
+    height: 15em;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    box-shadow: 0px 01px 7px 0px rgba(0, 0, 0, 0.169);
+    transition: 0.4s;
+
+}
+
+.cardDeptoHome_container:hover {
+    opacity: 0.8;
+    box-shadow: 0px 01px 7px 0px rgba(0, 0, 0, 0.467);
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+.cardDeptoHome_container_title {
+    /* background-color: aqua; */
+    font-size: 1.5em;
+    font-weight: bold;
+
+    text-align: center;
+}

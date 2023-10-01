@@ -4,19 +4,20 @@ const { Unidad } = require("../../postgres");
 const router = Router();
 
 router.post("/", async (req, res) => {
-    const { referencia, numero, metros } = req.body;
+    const { metrosCuadrados, piso, referenciaDepto, descripcion } = req.body;
     
     try {
         // Validar que los campos no estén vacíos
-        if (!referencia || !numero || !metros) {
+        if (!metrosCuadrados || !piso || !referenciaDepto || !descripcion) {  
             return res.status(400).json({ error: "Todos los campos son obligatorios." });
         }
 
         // Crear la unidad
         const unidad = await Unidad.create({
-            referenciaUnidad: referencia,
-            numeroUnidad: numero,
-            metrosCuadrados: metros
+            metrosCuadrados: metrosCuadrados,
+            piso: piso,
+            referenciaDepto: referenciaDepto,
+            descripcion: descripcion
         });
 
         res.status(200).json({ message: "Unidad creado exitosamente.", unidad });
@@ -42,7 +43,7 @@ router.get('/', async(req, res) => {
 router.put('/:id', async(req, res) => {
     
     const { id } = req.params;
-    const { referencia, numero, metros } = req.body;
+    const { metrosCuadrados, piso, referenciaDepto, descripcion } = req.body;
 
     
     try {
@@ -53,17 +54,17 @@ router.put('/:id', async(req, res) => {
             return res.status(404).json({error: "Unidad no encontrada"});
         }
         // actualizamos los datos del unidad
-        if(referencia) {
-            // si cambia la referencia
-            unidadId.referenciaUnidad = referencia;
+        if(metrosCuadrados) {
+            unidadId.metrosCuadrados = metrosCuadrados;
         }
-        if(numero) {
-            // si cambia el numero
-            unidadId.numeroUnidad = numero;
+        if(piso) {
+            unidadId.piso = piso;
         }
-        if(metros) {
-            // si cambia los metros
-            unidadId.metrosCuadrados = metros;
+        if(referenciaDepto) {
+            unidadId.referenciaDepto = referenciaDepto;
+        }
+        if(descripcion) {
+            unidadId.descripcion = descripcion;
         }
 
         // guardamos
@@ -88,8 +89,9 @@ router.delete('/:id', async(req, res) => {
             return res.status(404).json({error: "Unidad no encontrada"});
         }
 
-        // Elimina la unidad de la base de datos
-        await unidadId.destroy();
+        // Cambiamos el estado de la unidad a false (lo ocultamos).
+        unidadId.estado = false;
+        await unidadId.save();
 
         // Retorna un mensaje de éxito como respuesta
         res.status(200).json({ message: "Unidad eliminada exitosamente." });

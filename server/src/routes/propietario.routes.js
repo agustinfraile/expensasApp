@@ -4,11 +4,25 @@ const { Propietario } = require("../../postgres");
 const router = Router();
 
 router.post('/', async (req, res) => {
-    const { nombre, apellido, email } = req.body;
+    const { 
+        nombre,
+        apellido,
+        email,
+        telefono,
+        deptoQueHabita,
+        deptoPertenece
+     } = req.body;
 
     try {
         // Validar que los campos no estén vacíos
-        if (!nombre || !apellido || !email) {
+        if (
+            !nombre ||
+            !apellido ||
+            !email ||
+            !telefono ||
+            !deptoQueHabita ||
+            !deptoPertenece
+        ) {
             return res.status(400).json({ error: "Todos los campos son obligatorios." });
         }
 
@@ -16,14 +30,17 @@ router.post('/', async (req, res) => {
         const existingPropietario = await Propietario.findOne({ where: { correoElectronico: email } });
 
         if (existingPropietario) {
-            return res.status(400).json({ error: "El propietario ya existe." });
+            return res.status(400).json({ error: "La persona ya existe." });
         }
 
         // Crear el propietario
         const propietario = await Propietario.create({
             nombre: nombre,
             apellido: apellido,
-            correoElectronico: email
+            correoElectronico: email,
+            telefono: telefono,
+            deptoQueHabita: deptoQueHabita,
+            deptoPertenece: deptoPertenece,
         });
 
         res.status(200).json({ message: "Administrador creado exitosamente.", propietario });
@@ -51,7 +68,14 @@ router.get('/', async(req, res) => {
 router.put('/:id', async(req, res) => {
     
     const { id } = req.params;
-    const { nombre, apellido, email, pass } = req.body;
+    const { 
+        nombre,
+        apellido,
+        email,
+        telefono,
+        deptoQueHabita,
+        deptoPertenece
+     } = req.body;
     
     try {
         // buscamos al propietario por id
@@ -73,6 +97,18 @@ router.put('/:id', async(req, res) => {
         if(email) {
             // si cambia el email
             propietarioId.email = email;
+        }
+        if(telefono) {
+            // si cambia el telefono
+            propietarioId.telefono = telefono;
+        }
+        if(deptoQueHabita) {
+            // si cambia el depto que habita
+            propietarioId.deptoQueHabita = deptoQueHabita;
+        }
+        if(deptoPertenece) {
+            // si cambia el depto que pertenece
+            propietarioId.deptoPertenece = deptoPertenece;
         }
 
         // guardamos
@@ -97,8 +133,9 @@ router.delete('/:id', async(req, res) => {
             return res.status(404).json({ error: "Propietario no encontrado." });
         }
 
-        // Elimina al propietario de la base de datos
-        await propietarioId.destroy();
+        // Cambiamos el estado del propietario a false (lo ocultamos).
+        propietarioId.estado = false;
+        await propietarioId.save();
 
         // Retorna un mensaje de éxito como respuesta
         res.status(200).json({ message: "Propietario eliminado exitosamente." });

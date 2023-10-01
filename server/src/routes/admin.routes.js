@@ -51,7 +51,7 @@ router.get('/', async(req, res) => {
 router.put('/:id', async(req, res) => {
     
     const { id } = req.params;
-    const { nombre, apellido, email, pass } = req.body;
+    const { nombre, apellido, email, pass, telefono } = req.body;
     
     try {
         // buscamos al admin por id
@@ -90,8 +90,6 @@ router.put('/:id', async(req, res) => {
     }
 });
 
-
-// todo: modificar este endpoint para que no se borre el admin, solo se oculte
 router.delete('/:id', async(req, res) => {
     const { id } = req.params;
     try {
@@ -102,8 +100,9 @@ router.delete('/:id', async(req, res) => {
             return res.status(404).json({ error: "Administrador no encontrado." });
         }
 
-        // Elimina el administrador de la base de datos
-        await admin.destroy();
+        // Cambiamos el estado del admin a false (lo ocultamos).
+        admin.estado = false;
+        await admin.save();
 
         // Retorna un mensaje de éxito como respuesta
         res.status(200).json({ message: "Administrador eliminado exitosamente." });
